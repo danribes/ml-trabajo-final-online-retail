@@ -1,0 +1,78 @@
+{
+  "LogReg": {
+    "AUC": 0.7955040691355406,
+    "AP": 0.8200743335691836,
+    "Brier": 0.18446392645249884
+  },
+  "RandomForest": {
+    "AUC": 0.8030405853193012,
+    "AP": 0.8328532214987378,
+    "Brier": 0.1800106416966643
+  },
+  "XGBoost": {
+    "AUC": 0.78874691832569,
+    "AP": 0.8227291371244607,
+    "Brier": 0.19408714771270752
+  },
+  "LightGBM": {
+    "AUC": 0.7782122312647457,
+    "AP": 0.8124674158866203,
+    "Brier": 0.22862603508587956
+  },
+  "LightGBM_tuned": {
+    "AUC": 0.791090316252684,
+    "AP": 0.8257947948056787,
+    "Brier": 0.18908394778161178
+  },
+  "best_params": {
+    "subsample": 0.85,
+    "reg_lambda": 1.0,
+    "reg_alpha": 1.0,
+    "num_leaves": 63,
+    "n_estimators": 300,
+    "min_child_samples": 10,
+    "learning_rate": 0.02,
+    "colsample_bytree": 1.0
+  },
+  "final_model": "RandomForest",
+  "feature_importance": {
+    "Recency": 0.191,
+    "BuysPerMonth": 0.151,
+    "Monetary": 0.133,
+    "Frequency": 0.088,
+    "NLines": 0.074,
+    "NProducts": 0.067,
+    "AvgTicket": 0.062,
+    "StdRevenue": 0.062,
+    "Tenure": 0.059,
+    "AvgQty": 0.056,
+    "AvgLine": 0.054,
+    "IsUK": 0.004
+  },
+  "quality": {
+    "rows_raw": 1067371,
+    "cols": 8,
+    "date_min": "2009-12-01 07:45:00",
+    "date_max": "2011-12-09 12:50:00",
+    "nulls_pct": {
+      "Invoice": 0.0,
+      "StockCode": 0.0,
+      "Description": 0.4105414143723223,
+      "Quantity": 0.0,
+      "InvoiceDate": 0.0,
+      "Price": 0.0,
+      "CustomerID": 22.766872999172733,
+      "Country": 0.0
+    },
+    "duplicates": 34335,
+    "rows_clean": 798641,
+    "customers_clean": 5823,
+    "revenue_cap": 305.28000000000003
+  },
+  "cutoff": "2011-06-09",
+  "label_window_end": "2011-12-06",
+  "n_customers": 4914,
+  "repurchase_rate": 0.5158730158730159,
+  "top_decile_rate": 0.967479674796748,
+  "bottom_decile_rate": 0.12195121951219512
+}
