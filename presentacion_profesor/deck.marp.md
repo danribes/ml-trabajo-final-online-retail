@@ -343,72 +343,60 @@ Agregación por cliente sobre el periodo pre-corte. **12 variables** en 3 famili
 
 ---
 
-# 13 · Comparación de algoritmos
+# 13 · Comparación de algoritmos (Línea Base)
 
-**Estrategia:** un *baseline* lineal interpretable + tres modelos de árbol. Split holdout **75/25 estratificado** (3.685 train / 1.229 test). Métricas en test:
+**Estrategia:** un *baseline* lineal interpretable + tres modelos de árbol sobre las **12 variables RFM clásicas**. Split holdout **75/25 estratificado** (3.685 train / 1.229 test). Métricas en test:
 
 | Modelo | AUC | AP | Brier |
 |---|---:|---:|---:|
-| Logistic Regression *(baseline)* | 0,796 | 0,820 | 0,184 |
-| **Random Forest** | **0,803** | **0,833** | **0,180** |
-| XGBoost | 0,789 | 0,823 | 0,194 |
-| LightGBM | 0,778 | 0,812 | 0,229 |
+| Logistic Regression *(baseline)* | 0,7955 | 0,8201 | 0,1845 |
+| **Random Forest (best baseline)** | **0,8030** | **0,8329** | **0,1800** |
+| XGBoost | 0,7887 | 0,8227 | 0,1941 |
+| LightGBM | 0,7782 | 0,8125 | 0,2286 |
 
-- Los árboles **no** superan claramente al lineal → señal mayormente monótona, capturada ya por el RFM.
-- **Random Forest** lidera en las tres métricas (mejor AUC **y** mejor Brier).
+- Los árboles baseline apenas superan al lineal, sugiriendo que con 12 variables RFM clásicas el techo de performance ronda **AUC ≈ 0.80**.
 
 ---
 
-# 14 · Optimización — RandomizedSearchCV
+# 14 · Enriquecimiento + Optimización (Optuna)
 
-Búsqueda aleatoria (`n_iter=12`, CV=3, scoring=`roc_auc`) sobre **LightGBM**, el candidato con más margen de tuning:
+Para superar el límite del RFM clásico, enriquecimos el dataset a **30 variables** y optimizamos los modelos con **Optuna** (TPE bayesiano en LGBM/XGB/RF con CV de 5 folds).
 
 <div class="columns">
 <div>
 
-### Espacio de búsqueda
-`n_estimators`, `num_leaves`, `learning_rate`, `subsample`, `colsample_bytree`, `min_child_samples`, `reg_alpha`, `reg_lambda`.
-
-### Mejores hiperparámetros
-`learning_rate=0.02`, `num_leaves=63`, `n_estimators=300`, `subsample=0.85`, `reg_alpha=1.0`, `reg_lambda=1.0`.
+### 1. Variables Enriquecidas
+- **Intervalos de compra (IPI)**: Media, std, y CV de días entre compras (`IPI_mean`, `IPI_std`, `IPI_cv`).
+- **Tendencias**: Ratio de gasto en 1ª mitad vs 2ª mitad de la tenure (`RevenueTrend`).
+- **Recencia**: Compras en últimos 30/60/90 días.
+- **Ratios**: Diversidad de productos (`ProductDiversity`) e interacción Recencia x Frecuencia.
 
 </div>
 <div>
 
-### Resultado
-LightGBM **0,778 → 0,791** AUC tras el tuning.
-
-<p class="small">Mejora real, pero <strong>aún por debajo</strong> del Random Forest sin tunear (0,803). El tuning confirma que el techo del problema con estas features ronda AUC ≈ 0,80.</p>
+### 2. Tuning con Optuna
+* **Espacio**: 100 trials con TPE sampler y MedianPruner.
+* **Ganador**: **XGBoost** (CV AUC: **0,8107**).
+* **Parámetros**: `depth=3`, `n_est=607`, `lr=0.009`, `subsample=0.97`, `colsample=0.49`, `spw=1.22`.
 
 </div>
 </div>
 
 ---
 
-# 15 · Elección del modelo final
+# 15 · Elección del modelo final: Baseline vs Optuna
 
-<div class="columns">
-<div>
+El enriquecimiento comportamental y la optimización sistemática con Optuna permitieron romper el techo del 0.80 de AUC en test.
 
-### Criterio
-Máximo **AUC** en test, con calibración (**Brier**) como desempate.
+| Modelo | Features | Tuning | AUC Test | AP Test | Brier |
+|---|---|---|---:|---:|---:|
+| Random Forest *(baseline)* | 12 (RFM) | Ninguno | 0,8030 | 0,8329 | 0,1800 |
+| **XGBoost *(Optuna final)*** | **30 (Enriquecido)** | **Optuna** | **0,8141** | **0,8389** | **0,1791** |
 
-### Ganador → **Random Forest**
-- AUC **0,803** · AP **0,833** · Brier **0,180**.
-- Mejor en discriminación **y** en calibración.
-- Robusto, pocas hiperparametrizaciones críticas, no requiere escalado.
-
-</div>
-<div>
-
-### Por qué no los boosters
-- XGBoost / LightGBM no aportan ventaja con 12 features y ~5 K clientes.
-- Mayor riesgo de sobreajuste y más coste de tuning para igual o peor resultado.
-
-<p class="small">Navaja de Occam: el modelo más simple que rinde igual o mejor gana.</p>
-
-</div>
-</div>
+### Por qué destaca el modelo final:
+- **Mayor discriminación** → +1.11 pp de AUC y +0.60 pp de Average Precision (AP).
+- **Mejor calibración** → Brier Score baja a **0,1791**, lo que asegura que el score refleja probabilidades reales.
+- **Robustez** → Al usar profundidad baja (`max_depth=3`) y regularización (`alpha=0.77`), evitamos el sobreajuste.
 
 ---
 
@@ -423,7 +411,7 @@ Máximo **AUC** en test, con calibración (**Brier**) como desempate.
 </div>
 </div>
 
-**Lectura.** Curva ROC claramente sobre la diagonal (AUC 0,80). La curva de calibración sigue la diagonal ideal → las **probabilidades son fiables** y usables directamente para segmentar, sin recalibración obligatoria.
+**Lectura.** Curva ROC con el modelo final XGBoost liderando (AUC 0,814). La curva de calibración sigue la diagonal ideal → las **probabilidades son muy fiables** y usables directamente para segmentar, sin recalibración obligatoria.
 
 ---
 
@@ -436,14 +424,14 @@ Máximo **AUC** en test, con calibración (**Brier**) como desempate.
 <div>
 
 ### Top drivers
-1. **Recency** (0,19) — cuánto hace de la última compra
-2. **BuysPerMonth** (0,15) — ritmo
-3. **Monetary** (0,13) — gasto
-4. **Frequency** (0,09)
+1. **Recency** — cuánto hace de la última compra
+2. **BuysPerMonth** — ritmo de compra mensual
+3. **IPI_mean** — media de días entre compras
+4. **Monetary** — gasto acumulado
 
 `IsUK` ≈ 0 → confirma lo visto en EDA.
 
-<p class="small">El RFM clásico + ritmo de compra explica la mayor parte de la señal → modelo coherente con la intuición de negocio.</p>
+<p class="small">Las nuevas variables comportamentales (como los intervalos entre compras y recencia reciente) han aportado la señal clave para superar al baseline.</p>
 
 </div>
 </div>
@@ -459,8 +447,8 @@ Máximo **AUC** en test, con calibración (**Brier**) como desempate.
 <div>
 
 <div class="kpis" style="grid-template-columns:1fr;">
-<div class="kpi"><div class="num">97 %</div><div class="lbl">recompra en el decil TOP (vs 51,6 % base)</div></div>
-<div class="kpi"><div class="num">12 %</div><div class="lbl">recompra en el decil más bajo</div></div>
+<div class="kpi"><div class="num">96,7 %</div><div class="lbl">recompra en el decil TOP (vs 51,6 % base)</div></div>
+<div class="kpi"><div class="num">12,2 %</div><div class="lbl">recompra en el decil más bajo</div></div>
 </div>
 
 <p class="small">El score ordena la base de forma <strong>monótona y accionable</strong>: un gradiente claro de probabilidad por decil.</p>
@@ -472,7 +460,7 @@ Máximo **AUC** en test, con calibración (**Brier**) como desempate.
 
 # 19 · Conclusiones y propuesta de uso
 
-**El modelo (Random Forest, AUC 0,80) separa con fiabilidad** a quién retener de a quién fidelizar. Plan accionable por decil de score:
+**El modelo final (XGBoost, AUC 0,814) separa con fiabilidad** a quién retener de a quién fidelizar. Plan accionable por decil de score:
 
 | Segmento (decil) | Probabilidad | Acción comercial |
 |---|---|---|
@@ -480,7 +468,7 @@ Máximo **AUC** en test, con calibración (**Brier**) como desempate.
 | **5–8** | Media | **Cross-sell**: cupones personalizados, recomendación por afinidad |
 | **0–4** | Baja | **Retención / win-back**: descuento agresivo + encuesta de churn |
 
-<p class="small">Drivers de la decisión: <strong>Recency</strong>, <strong>ritmo de compra</strong>, <strong>gasto</strong> y <strong>frecuencia</strong> — interpretables y comunicables a negocio.</p>
+<p class="small">Drivers de la decisión: <strong>Recency</strong>, <strong>ritmo de compra</strong>, <strong>días promedio entre compras (IPI)</strong> y <strong>gasto</strong> — altamente interpretables.</p>
 
 ---
 

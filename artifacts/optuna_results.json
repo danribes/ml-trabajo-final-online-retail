@@ -1,0 +1,231 @@
+{
+  "previous_best_auc": 0.803,
+  "optuna_best_cv_auc": 0.8107266759150843,
+  "optuna_best_test_auc": 0.8140762929777589,
+  "stacking_test_auc": 0.8059247673832941,
+  "final_model": "Optuna_xgb",
+  "final_auc": 0.8140762929777589,
+  "improvement": 0.011076292977758806,
+  "best_model_type": "xgb",
+  "best_params": {
+    "model": "xgb",
+    "xgb_n_est": 607,
+    "xgb_depth": 3,
+    "xgb_lr": 0.008987707278127354,
+    "xgb_sub": 0.9661482947292881,
+    "xgb_colsample": 0.4918544004808804,
+    "xgb_minchild": 19,
+    "xgb_gamma": 0.11010637435189598,
+    "xgb_alpha": 0.7685041766361129,
+    "xgb_lambda": 0.03269305406731177,
+    "xgb_spw": 1.220485824793041
+  },
+  "n_trials": 100,
+  "n_features": 30,
+  "features": [
+    "Recency",
+    "Tenure",
+    "Frequency",
+    "NLines",
+    "NProducts",
+    "Monetary",
+    "AvgTicket",
+    "AvgLine",
+    "AvgQty",
+    "StdRevenue",
+    "IsUK",
+    "BuysPerMonth",
+    "DayOfWeekMode",
+    "HourMode",
+    "WeekendRatio",
+    "IPI_mean",
+    "IPI_std",
+    "IPI_cv",
+    "RevenueTrend",
+    "Freq_last30d",
+    "Freq_last60d",
+    "Freq_last90d",
+    "ProductDiversity",
+    "RevenuePerProduct",
+    "Recency_x_Freq",
+    "Monetary_per_Tenure",
+    "NCountries",
+    "Log_Monetary",
+    "Log_StdRevenue",
+    "Log_AvgTicket"
+  ],
+  "enriched": true,
+  "elapsed_minutes": 1.9,
+  "top_10_trials": [
+    {
+      "number": 54,
+      "value": 0.8107,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 607,
+        "xgb_depth": 3,
+        "xgb_lr": 0.008987707278127354,
+        "xgb_sub": 0.9661482947292881,
+        "xgb_colsample": 0.4918544004808804,
+        "xgb_minchild": 19,
+        "xgb_gamma": 0.11010637435189598,
+        "xgb_alpha": 0.7685041766361129,
+        "xgb_lambda": 0.03269305406731177,
+        "xgb_spw": 1.220485824793041
+      }
+    },
+    {
+      "number": 64,
+      "value": 0.8104,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 559,
+        "xgb_depth": 3,
+        "xgb_lr": 0.008755520763327793,
+        "xgb_sub": 0.7729246789356053,
+        "xgb_colsample": 0.5359974863738274,
+        "xgb_minchild": 15,
+        "xgb_gamma": 0.0012263150805794953,
+        "xgb_alpha": 0.6214237334734779,
+        "xgb_lambda": 0.0018867014854403853,
+        "xgb_spw": 1.0981308128797234
+      }
+    },
+    {
+      "number": 94,
+      "value": 0.8101,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 657,
+        "xgb_depth": 3,
+        "xgb_lr": 0.006537973371246283,
+        "xgb_sub": 0.8487290317914178,
+        "xgb_colsample": 0.5050260946050812,
+        "xgb_minchild": 7,
+        "xgb_gamma": 6.181777615614017e-08,
+        "xgb_alpha": 0.2283662480778239,
+        "xgb_lambda": 4.371895847973471e-05,
+        "xgb_spw": 0.719126618302888
+      }
+    },
+    {
+      "number": 98,
+      "value": 0.8101,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 719,
+        "xgb_depth": 3,
+        "xgb_lr": 0.008146875331585292,
+        "xgb_sub": 0.8728678393076674,
+        "xgb_colsample": 0.4638801724577637,
+        "xgb_minchild": 6,
+        "xgb_gamma": 5.182112797353591e-06,
+        "xgb_alpha": 0.6898698104243434,
+        "xgb_lambda": 4.121280722939831e-05,
+        "xgb_spw": 1.2270963192656033
+      }
+    },
+    {
+      "number": 92,
+      "value": 0.8099,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 636,
+        "xgb_depth": 3,
+        "xgb_lr": 0.007410273485049377,
+        "xgb_sub": 0.7960342360094463,
+        "xgb_colsample": 0.47263288443249274,
+        "xgb_minchild": 13,
+        "xgb_gamma": 1.75438900509918e-05,
+        "xgb_alpha": 0.6721302367820328,
+        "xgb_lambda": 3.3386737939650685e-05,
+        "xgb_spw": 0.8186592124314166
+      }
+    },
+    {
+      "number": 56,
+      "value": 0.8099,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 614,
+        "xgb_depth": 3,
+        "xgb_lr": 0.006240298915228547,
+        "xgb_sub": 0.9248854205901071,
+        "xgb_colsample": 0.4426298176498445,
+        "xgb_minchild": 12,
+        "xgb_gamma": 0.1003956660441807,
+        "xgb_alpha": 0.8373583194269751,
+        "xgb_lambda": 0.021801464582978308,
+        "xgb_spw": 1.19901516405702
+      }
+    },
+    {
+      "number": 73,
+      "value": 0.8099,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 580,
+        "xgb_depth": 3,
+        "xgb_lr": 0.006491853959497348,
+        "xgb_sub": 0.7417662209512441,
+        "xgb_colsample": 0.5392331932346728,
+        "xgb_minchild": 2,
+        "xgb_gamma": 0.000983696756808121,
+        "xgb_alpha": 0.6213250515542721,
+        "xgb_lambda": 1.8784378484183527e-05,
+        "xgb_spw": 0.6610355500079036
+      }
+    },
+    {
+      "number": 62,
+      "value": 0.8099,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 572,
+        "xgb_depth": 3,
+        "xgb_lr": 0.009089352818957497,
+        "xgb_sub": 0.7596575762751121,
+        "xgb_colsample": 0.48721449719785664,
+        "xgb_minchild": 12,
+        "xgb_gamma": 0.0014785493309315704,
+        "xgb_alpha": 0.7675710838547578,
+        "xgb_lambda": 0.0054150068551882405,
+        "xgb_spw": 1.081321556585866
+      }
+    },
+    {
+      "number": 72,
+      "value": 0.8099,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 571,
+        "xgb_depth": 3,
+        "xgb_lr": 0.0066462045804692475,
+        "xgb_sub": 0.7473556915784427,
+        "xgb_colsample": 0.5123204829298218,
+        "xgb_minchild": 5,
+        "xgb_gamma": 0.0008962052400445082,
+        "xgb_alpha": 0.3837850020725651,
+        "xgb_lambda": 4.9311997166143226e-05,
+        "xgb_spw": 0.7263838420210171
+      }
+    },
+    {
+      "number": 71,
+      "value": 0.8099,
+      "params": {
+        "model": "xgb",
+        "xgb_n_est": 577,
+        "xgb_depth": 3,
+        "xgb_lr": 0.006370509983114907,
+        "xgb_sub": 0.7668407950872798,
+        "xgb_colsample": 0.49805226345414283,
+        "xgb_minchild": 11,
+        "xgb_gamma": 0.002717677705268581,
+        "xgb_alpha": 0.7028113707205669,
+        "xgb_lambda": 0.00011415448023141891,
+        "xgb_spw": 0.9466711813837004
+      }
+    }
+  ]
+}

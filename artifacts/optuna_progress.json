@@ -1,0 +1,34 @@
+{
+  "current_trial": 100,
+  "best_value": 0.8107266759150843,
+  "best_params": {
+    "model": "xgb",
+    "xgb_n_est": 607,
+    "xgb_depth": 3,
+    "xgb_lr": 0.008987707278127354,
+    "xgb_sub": 0.9661482947292881,
+    "xgb_colsample": 0.4918544004808804,
+    "xgb_minchild": 19,
+    "xgb_gamma": 0.11010637435189598,
+    "xgb_alpha": 0.7685041766361129,
+    "xgb_lambda": 0.03269305406731177,
+    "xgb_spw": 1.220485824793041
+  },
+  "best_trial_number": 54,
+  "elapsed_seconds": 112.8,
+  "last_trial_value": 0.8083602860161838,
+  "last_trial_params": {
+    "model": "xgb",
+    "xgb_n_est": 736,
+    "xgb_depth": 4,
+    "xgb_lr": 0.00830791148162851,
+    "xgb_sub": 0.8544524478211125,
+    "xgb_colsample": 0.49388655943541115,
+    "xgb_minchild": 6,
+    "xgb_gamma": 2.670105293849035e-06,
+    "xgb_alpha": 0.33156014084296126,
+    "xgb_lambda": 4.060615049126762e-05,
+    "xgb_spw": 0.8459079418015036
+  },
+  "last_trial_model": "xgb"
+}

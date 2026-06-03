@@ -1403,7 +1403,7 @@ section.divider::after { color:#9fc4e8; }
 <p>El corte cae <strong>6 meses antes</strong> del final del dataset → deja una ventana completa para observar la recompra.</p>
 </div>
 <div>
-<div class="kpis" style="grid-template-columns:1fr;">
+<div class="kpis">
 <div class="kpi"><div class="num">4.914</div><div class="lbl">clientes en periodo pre-corte (modelables)</div></div>
 <div class="kpi"><div class="num">51,6 %</div><div class="lbl">tasa de recompra (positivos)</div></div>
 </div>
@@ -2278,8 +2278,8 @@ section.divider h2 { color: #cde3f5 !important; font-weight: 400; font-size: 1.3
 section.divider::after { color:#9fc4e8; }
 ;background-color:#fafbfc;background-image:none;" data-marpit-pagination-total="25" data-size="16:9">
 <header>Predicción de recompra · Online Retail II</header>
-<h1 id="13--comparaci%C3%B3n-de-algoritmos">13 · Comparación de algoritmos</h1>
-<p><strong>Estrategia:</strong> un <em>baseline</em> lineal interpretable + tres modelos de árbol. Split holdout <strong>75/25 estratificado</strong> (3.685 train / 1.229 test). Métricas en test:</p>
+<h1 id="13--comparaci%C3%B3n-de-algoritmos-l%C3%ADnea-base">13 · Comparación de algoritmos (Línea Base)</h1>
+<p><strong>Estrategia:</strong> un <em>baseline</em> lineal interpretable + tres modelos de árbol sobre las <strong>12 variables RFM clásicas</strong>. Split holdout <strong>75/25 estratificado</strong> (3.685 train / 1.229 test). Métricas en test:</p>
 <table>
 <thead>
 <tr>
@@ -2292,37 +2292,36 @@ section.divider::after { color:#9fc4e8; }
 <tbody>
 <tr>
 <td>Logistic Regression <em>(baseline)</em></td>
-<td style="text-align:right">0,796</td>
-<td style="text-align:right">0,820</td>
-<td style="text-align:right">0,184</td>
+<td style="text-align:right">0,7955</td>
+<td style="text-align:right">0,8201</td>
+<td style="text-align:right">0,1845</td>
 </tr>
 <tr>
-<td><strong>Random Forest</strong></td>
-<td style="text-align:right"><strong>0,803</strong></td>
-<td style="text-align:right"><strong>0,833</strong></td>
-<td style="text-align:right"><strong>0,180</strong></td>
+<td><strong>Random Forest (best baseline)</strong></td>
+<td style="text-align:right"><strong>0,8030</strong></td>
+<td style="text-align:right"><strong>0,8329</strong></td>
+<td style="text-align:right"><strong>0,1800</strong></td>
 </tr>
 <tr>
 <td>XGBoost</td>
-<td style="text-align:right">0,789</td>
-<td style="text-align:right">0,823</td>
-<td style="text-align:right">0,194</td>
+<td style="text-align:right">0,7887</td>
+<td style="text-align:right">0,8227</td>
+<td style="text-align:right">0,1941</td>
 </tr>
 <tr>
 <td>LightGBM</td>
-<td style="text-align:right">0,778</td>
-<td style="text-align:right">0,812</td>
-<td style="text-align:right">0,229</td>
+<td style="text-align:right">0,7782</td>
+<td style="text-align:right">0,8125</td>
+<td style="text-align:right">0,2286</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>Los árboles <strong>no</strong> superan claramente al lineal → señal mayormente monótona, capturada ya por el RFM.</li>
-<li><strong>Random Forest</strong> lidera en las tres métricas (mejor AUC <strong>y</strong> mejor Brier).</li>
+<li>Los árboles baseline apenas superan al lineal, sugiriendo que con 12 variables RFM clásicas el techo de performance ronda <strong>AUC ≈ 0.80</strong>.</li>
 </ul>
 <footer>Daniel Ribes · Máster ML — Trabajo final · 31-05-2026</footer>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-paginate="true" data-background-color="#fafbfc" data-header="Predicción de recompra · Online Retail II" data-footer="Daniel Ribes · Máster ML — Trabajo final · 31-05-2026" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-marpit-fragments="3" data-paginate="true" data-background-color="#fafbfc" data-header="Predicción de recompra · Online Retail II" data-footer="Daniel Ribes · Máster ML — Trabajo final · 31-05-2026" data-theme="default" data-style="section {
   font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
   color: #1f2937;
   padding: 34px 52px 42px 52px;
@@ -2430,19 +2429,25 @@ section.divider h2 { color: #cde3f5 !important; font-weight: 400; font-size: 1.3
 section.divider::after { color:#9fc4e8; }
 ;background-color:#fafbfc;background-image:none;" data-marpit-pagination-total="25" data-size="16:9">
 <header>Predicción de recompra · Online Retail II</header>
-<h1 id="14--optimizaci%C3%B3n--randomizedsearchcv">14 · Optimización — RandomizedSearchCV</h1>
-<p>Búsqueda aleatoria (<code>n_iter=12</code>, CV=3, scoring=<code>roc_auc</code>) sobre <strong>LightGBM</strong>, el candidato con más margen de tuning:</p>
+<h1 id="14--enriquecimiento--optimizaci%C3%B3n-optuna">14 · Enriquecimiento + Optimización (Optuna)</h1>
+<p>Para superar el límite del RFM clásico, enriquecimos el dataset a <strong>30 variables</strong> y optimizamos los modelos con <strong>Optuna</strong> (TPE bayesiano en LGBM/XGB/RF con CV de 5 folds).</p>
 <div class="columns">
 <div>
-<h3 id="espacio-de-b%C3%BAsqueda">Espacio de búsqueda</h3>
-<p><code>n_estimators</code>, <code>num_leaves</code>, <code>learning_rate</code>, <code>subsample</code>, <code>colsample_bytree</code>, <code>min_child_samples</code>, <code>reg_alpha</code>, <code>reg_lambda</code>.</p>
-<h3 id="mejores-hiperpar%C3%A1metros">Mejores hiperparámetros</h3>
-<p><code>learning_rate=0.02</code>, <code>num_leaves=63</code>, <code>n_estimators=300</code>, <code>subsample=0.85</code>, <code>reg_alpha=1.0</code>, <code>reg_lambda=1.0</code>.</p>
+<h3 id="1-variables-enriquecidas">1. Variables Enriquecidas</h3>
+<ul>
+<li><strong>Intervalos de compra (IPI)</strong>: Media, std, y CV de días entre compras (<code>IPI_mean</code>, <code>IPI_std</code>, <code>IPI_cv</code>).</li>
+<li><strong>Tendencias</strong>: Ratio de gasto en 1ª mitad vs 2ª mitad de la tenure (<code>RevenueTrend</code>).</li>
+<li><strong>Recencia</strong>: Compras en últimos 30/60/90 días.</li>
+<li><strong>Ratios</strong>: Diversidad de productos (<code>ProductDiversity</code>) e interacción Recencia x Frecuencia.</li>
+</ul>
 </div>
 <div>
-<h3 id="resultado">Resultado</h3>
-<p>LightGBM <strong>0,778 → 0,791</strong> AUC tras el tuning.</p>
-<p class="small">Mejora real, pero <strong>aún por debajo</strong> del Random Forest sin tunear (0,803). El tuning confirma que el techo del problema con estas features ronda AUC ≈ 0,80.</p>
+<h3 id="2-tuning-con-optuna">2. Tuning con Optuna</h3>
+<ul>
+<li data-marpit-fragment="1"><strong>Espacio</strong>: 100 trials con TPE sampler y MedianPruner.</li>
+<li data-marpit-fragment="2"><strong>Ganador</strong>: <strong>XGBoost</strong> (CV AUC: <strong>0,8107</strong>).</li>
+<li data-marpit-fragment="3"><strong>Parámetros</strong>: <code>depth=3</code>, <code>n_est=607</code>, <code>lr=0.009</code>, <code>subsample=0.97</code>, <code>colsample=0.49</code>, <code>spw=1.22</code>.</li>
+</ul>
 </div>
 </div>
 <footer>Daniel Ribes · Máster ML — Trabajo final · 31-05-2026</footer>
@@ -2555,27 +2560,44 @@ section.divider h2 { color: #cde3f5 !important; font-weight: 400; font-size: 1.3
 section.divider::after { color:#9fc4e8; }
 ;background-color:#fafbfc;background-image:none;" data-marpit-pagination-total="25" data-size="16:9">
 <header>Predicción de recompra · Online Retail II</header>
-<h1 id="15--elecci%C3%B3n-del-modelo-final">15 · Elección del modelo final</h1>
-<div class="columns">
-<div>
-<h3 id="criterio">Criterio</h3>
-<p>Máximo <strong>AUC</strong> en test, con calibración (<strong>Brier</strong>) como desempate.</p>
-<h3 id="ganador-%E2%86%92-random-forest">Ganador → <strong>Random Forest</strong></h3>
+<h1 id="15--elecci%C3%B3n-del-modelo-final-baseline-vs-optuna">15 · Elección del modelo final: Baseline vs Optuna</h1>
+<p>El enriquecimiento comportamental y la optimización sistemática con Optuna permitieron romper el techo del 0.80 de AUC en test.</p>
+<table>
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Features</th>
+<th>Tuning</th>
+<th style="text-align:right">AUC Test</th>
+<th style="text-align:right">AP Test</th>
+<th style="text-align:right">Brier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Random Forest <em>(baseline)</em></td>
+<td>12 (RFM)</td>
+<td>Ninguno</td>
+<td style="text-align:right">0,8030</td>
+<td style="text-align:right">0,8329</td>
+<td style="text-align:right">0,1800</td>
+</tr>
+<tr>
+<td><strong>XGBoost <em>(Optuna final)</em></strong></td>
+<td><strong>30 (Enriquecido)</strong></td>
+<td><strong>Optuna</strong></td>
+<td style="text-align:right"><strong>0,8141</strong></td>
+<td style="text-align:right"><strong>0,8389</strong></td>
+<td style="text-align:right"><strong>0,1791</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="por-qu%C3%A9-destaca-el-modelo-final">Por qué destaca el modelo final:</h3>
 <ul>
-<li>AUC <strong>0,803</strong> · AP <strong>0,833</strong> · Brier <strong>0,180</strong>.</li>
-<li>Mejor en discriminación <strong>y</strong> en calibración.</li>
-<li>Robusto, pocas hiperparametrizaciones críticas, no requiere escalado.</li>
+<li><strong>Mayor discriminación</strong> → +1.11 pp de AUC y +0.60 pp de Average Precision (AP).</li>
+<li><strong>Mejor calibración</strong> → Brier Score baja a <strong>0,1791</strong>, lo que asegura que el score refleja probabilidades reales.</li>
+<li><strong>Robustez</strong> → Al usar profundidad baja (<code>max_depth=3</code>) y regularización (<code>alpha=0.77</code>), evitamos el sobreajuste.</li>
 </ul>
-</div>
-<div>
-<h3 id="por-qu%C3%A9-no-los-boosters">Por qué no los boosters</h3>
-<ul>
-<li>XGBoost / LightGBM no aportan ventaja con 12 features y ~5 K clientes.</li>
-<li>Mayor riesgo de sobreajuste y más coste de tuning para igual o peor resultado.</li>
-</ul>
-<p class="small">Navaja de Occam: el modelo más simple que rinde igual o mejor gana.</p>
-</div>
-</div>
 <footer>Daniel Ribes · Máster ML — Trabajo final · 31-05-2026</footer>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-paginate="true" data-background-color="#fafbfc" data-header="Predicción de recompra · Online Retail II" data-footer="Daniel Ribes · Máster ML — Trabajo final · 31-05-2026" data-theme="default" data-style="section {
@@ -2695,7 +2717,7 @@ section.divider::after { color:#9fc4e8; }
 <img src="../artifacts/model_calibration.png" width="340" />
 </div>
 </div>
-<p><strong>Lectura.</strong> Curva ROC claramente sobre la diagonal (AUC 0,80). La curva de calibración sigue la diagonal ideal → las <strong>probabilidades son fiables</strong> y usables directamente para segmentar, sin recalibración obligatoria.</p>
+<p><strong>Lectura.</strong> Curva ROC con el modelo final XGBoost liderando (AUC 0,814). La curva de calibración sigue la diagonal ideal → las <strong>probabilidades son muy fiables</strong> y usables directamente para segmentar, sin recalibración obligatoria.</p>
 <footer>Daniel Ribes · Máster ML — Trabajo final · 31-05-2026</footer>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-paginate="true" data-background-color="#fafbfc" data-header="Predicción de recompra · Online Retail II" data-footer="Daniel Ribes · Máster ML — Trabajo final · 31-05-2026" data-theme="default" data-style="section {
@@ -2814,13 +2836,13 @@ section.divider::after { color:#9fc4e8; }
 <div>
 <h3 id="top-drivers">Top drivers</h3>
 <ol>
-<li><strong>Recency</strong> (0,19) — cuánto hace de la última compra</li>
-<li><strong>BuysPerMonth</strong> (0,15) — ritmo</li>
-<li><strong>Monetary</strong> (0,13) — gasto</li>
-<li><strong>Frequency</strong> (0,09)</li>
+<li><strong>Recency</strong> — cuánto hace de la última compra</li>
+<li><strong>BuysPerMonth</strong> — ritmo de compra mensual</li>
+<li><strong>IPI_mean</strong> — media de días entre compras</li>
+<li><strong>Monetary</strong> — gasto acumulado</li>
 </ol>
 <p><code>IsUK</code> ≈ 0 → confirma lo visto en EDA.</p>
-<p class="small">El RFM clásico + ritmo de compra explica la mayor parte de la señal → modelo coherente con la intuición de negocio.</p>
+<p class="small">Las nuevas variables comportamentales (como los intervalos entre compras y recencia reciente) han aportado la señal clave para superar al baseline.</p>
 </div>
 </div>
 <footer>Daniel Ribes · Máster ML — Trabajo final · 31-05-2026</footer>
@@ -2939,9 +2961,9 @@ section.divider::after { color:#9fc4e8; }
 <img src="../artifacts/model_deciles.png" width="600" />
 </div>
 <div>
-<div class="kpis" style="grid-template-columns:1fr;">
-<div class="kpi"><div class="num">97 %</div><div class="lbl">recompra en el decil TOP (vs 51,6 % base)</div></div>
-<div class="kpi"><div class="num">12 %</div><div class="lbl">recompra en el decil más bajo</div></div>
+<div class="kpis">
+<div class="kpi"><div class="num">96,7 %</div><div class="lbl">recompra en el decil TOP (vs 51,6 % base)</div></div>
+<div class="kpi"><div class="num">12,2 %</div><div class="lbl">recompra en el decil más bajo</div></div>
 </div>
 <p class="small">El score ordena la base de forma <strong>monótona y accionable</strong>: un gradiente claro de probabilidad por decil.</p>
 </div>
@@ -3057,7 +3079,7 @@ section.divider::after { color:#9fc4e8; }
 ;background-color:#fafbfc;background-image:none;" data-marpit-pagination-total="25" data-size="16:9">
 <header>Predicción de recompra · Online Retail II</header>
 <h1 id="19--conclusiones-y-propuesta-de-uso">19 · Conclusiones y propuesta de uso</h1>
-<p><strong>El modelo (Random Forest, AUC 0,80) separa con fiabilidad</strong> a quién retener de a quién fidelizar. Plan accionable por decil de score:</p>
+<p><strong>El modelo final (XGBoost, AUC 0,814) separa con fiabilidad</strong> a quién retener de a quién fidelizar. Plan accionable por decil de score:</p>
 <table>
 <thead>
 <tr>
@@ -3084,7 +3106,7 @@ section.divider::after { color:#9fc4e8; }
 </tr>
 </tbody>
 </table>
-<p class="small">Drivers de la decisión: <strong>Recency</strong>, <strong>ritmo de compra</strong>, <strong>gasto</strong> y <strong>frecuencia</strong> — interpretables y comunicables a negocio.</p>
+<p class="small">Drivers de la decisión: <strong>Recency</strong>, <strong>ritmo de compra</strong>, <strong>días promedio entre compras (IPI)</strong> y <strong>gasto</strong> — altamente interpretables.</p>
 <footer>Daniel Ribes · Máster ML — Trabajo final · 31-05-2026</footer>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-paginate="true" data-background-color="#fafbfc" data-header="Predicción de recompra · Online Retail II" data-footer="Daniel Ribes · Máster ML — Trabajo final · 31-05-2026" data-theme="default" data-style="section {

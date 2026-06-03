@@ -119,10 +119,10 @@ tx = s.shapes.add_textbox(Inches(3.30), Inches(3.80), Inches(6.55), Inches(1.75)
 tf = tx.text_frame; tf.word_wrap = True
 lines = [
     f'Modelo final: {best}',
-    f'AUC = {auc:.3f}   AP = {ap:.3f}',
-    f'Top features: Recency, BuysPerMonth, Monetary, AvgQty',
-    f'Top decil score → {m["top_decile_rate"]*100:.0f}% recompran',
-    f'Bottom decil   → {m["bottom_decile_rate"]*100:.0f}% recompran',
+    f'Desempeño actual:  AUC = {auc:.4f}   AP = {ap:.4f}',
+    f'Modelo RF anterior:  AUC = 0.8030   AP = 0.8329',
+    f'Mejora de performance:  +{auc - 0.8030:+.4f} AUC',
+    f'Top decil score → {m["top_decile_rate"]*100:.1f}% recompran (vs {m["bottom_decile_rate"]*100:.1f}% decil bajo)',
 ]
 for i, t in enumerate(lines):
     para = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
@@ -136,10 +136,10 @@ s = p.slides[4]
 set_text(s.shapes[0], ['Conclusiones y próximos pasos'])
 # right of "Conclusiones" → principales conclusiones
 set_text(s.shapes[1], [
-    f'• Modelo {best} con AUC test ≈ {auc:.2f}, AP ≈ {ap:.2f}.',
+    f'• Modelo {best} con AUC test ≈ {auc:.4f}, AP ≈ {ap:.4f}.',
     f'• Buena calibración → score utilizable como probabilidad real.',
-    f'• Lift fuerte: top 10% del score recompra {m["top_decile_rate"]*100:.0f}% vs. {m["bottom_decile_rate"]*100:.0f}% en el último decil.',
-    '• Variables RFM dominan; la dimensión territorial (IsUK) aporta poco.',
+    f'• Lift fuerte: top 10% del score recompra {m["top_decile_rate"]*100:.1f}% vs. {m["bottom_decile_rate"]*100:.1f}% en el último decil.',
+    '• Variables comportamentales e IPI superan a la línea base.',
     '• Recomendación: usar score por decil para diseñar campañas.',
 ])
 # right of "Próximos pasos"
