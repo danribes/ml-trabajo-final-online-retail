@@ -2,12 +2,24 @@
 online_retail_II.xlsx
 online_retail.pkl
 
+# Accessory / scratch files
+Analisis de reseñas (plantilla).pptx
+Analisis de reseñas (plantilla).pptx.pdf
+online_retail_II_EDA-basic.ipynb
+ejercicio práctico ML.pdf
+artifacts/optuna_progress.json
+
 # Python
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .venv/
 venv/
+
+# Presentacion (keep only PDF)
+presentacion/deck.html
+presentacion/deck.marp.md
+presentacion/deck.pptx
 
 # OS
 .DS_Store
