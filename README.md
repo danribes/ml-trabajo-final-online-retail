@@ -8,14 +8,14 @@ Trabajo final del módulo de Machine Learning. Construye un modelo de probabilid
 |---|---|
 | `ml_trabajo_final.ipynb` | Notebook ejecutado de extremo a extremo (EDA → limpieza → features → modelos → tuning → diagnóstico → conclusiones). |
 | `presentacion_recompra.pptx` | Presentación de 5 slides para negocio. |
-| `presentacion_profesor/` | Deck técnico (Marp → `deck.pdf` / `deck.pptx` / `deck.html`). |
+| `presentacion/` | Deck técnico (Marp → `deck.pdf` tracked; `deck.pptx` / `deck.html` / `deck.marp.md` en `.gitignore`). |
 | `build_pipeline.py` | Script reproducible que regenera todos los artefactos. |
 | `build_notebook.py` | Genera el notebook a partir del pipeline. |
 | `build_pptx.py` | Genera la pptx desde la plantilla. |
 | `generate_final_deliverables.py` | Entrena todos los modelos base y genera artefactos finales. |
 | `optuna_tuning.py` | Búsqueda bayesiana (TPE, 100 trials) sobre XGBoost/LightGBM/RF con features enriquecidas. Acepta `--n-trials` y `--baseline-only`. |
 | `rebuild_pickle.py` | Reconstruye `online_retail.pkl` desde el Excel original (~30 s). |
-| `artifacts/` | PNGs de EDA + modelo + `metrics.json` + `optuna_results.json` + `optuna_progress.json`. |
+| `artifacts/` | PNGs de EDA + modelo + `metrics.json` + `optuna_results.json`. |
 
 ## Dataset
 
